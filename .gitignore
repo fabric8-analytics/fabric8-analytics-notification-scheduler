@@ -1,0 +1,5 @@
+notify/
+openshift/env.sh
+venv/
+.coverage
+.pytest_cache/

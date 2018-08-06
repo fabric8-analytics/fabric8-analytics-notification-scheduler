@@ -1,0 +1,44 @@
+apiVersion: v1     
+kind: Template
+labels:
+  template: f8a-notification
+metadata:
+  name: f8a-notification
+  annotations:
+    description: f8a-notification
+objects:
+- apiVersion:  batch/v2alpha1
+  kind: CronJob
+  metadata:
+    name: f8a-notification-scheduler
+    annotations:
+      description: f8a-notification-scheduler
+  spec:
+    schedule: "*/1 * * * *"  
+    jobTemplate:             
+      spec:
+        template:
+          spec: 
+            containers:
+            - name: f8a-notification-scheduler
+              image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+            restartPolicy:  OnFailure
+parameters:
+- description: Docker registry
+  displayName: Docker registry
+  required: true
+  name: DOCKER_REGISTRY
+  value: "registry.devshift.net"
+
+- description: Docker image
+  displayName: Docker image
+  required: true
+  name: DOCKER_IMAGE
+  value: "fabric8-analytics/f8a-notification"
+    
+- description: Image tag
+  displayName: Image tag
+  required: true
+  name: IMAGE_TAG
+  value: "latest"
+
