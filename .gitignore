@@ -3,3 +3,4 @@ openshift/env.sh
 venv/
 .coverage
 .pytest_cache/
+f8a_notification/__pycache__
