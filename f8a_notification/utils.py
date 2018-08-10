@@ -153,7 +153,7 @@ def execute_gremlin_dsl(payloads):
             return None
 
     except Exception:
-        print traceback.format_exc()
+        print(traceback.format_exc())
         #logger.error(traceback.format_exc())
         return None
 

@@ -195,10 +195,10 @@ def find_latest_version():
                 latest_version = select_latest_version(cur_ver, libio_ver, latest_ver, pkg_name)
                 if latest_version != cur_ver:
                     FINAL_DATA[repo]['notify'] = "true"
-                    tmp_json['ecosystem'] = REPO_DATA[repo]['ecosystem'].encode('ascii')
-                    tmp_json['name'] = pkg_name.encode('ascii')
-                    tmp_json['version'] = cur_ver.encode('ascii')
-                    tmp_json['latest_version'] = latest_version.encode('ascii')
+                    tmp_json['ecosystem'] = REPO_DATA[repo]['ecosystem']
+                    tmp_json['name'] = pkg_name
+                    tmp_json['version'] = cur_ver
+                    tmp_json['latest_version'] = latest_version
                     tmp_lst.append(tmp_json)
         FINAL_DATA[repo]['version_updates'] = tmp_lst[:]
 
@@ -225,6 +225,7 @@ def check_license_compatibility():
                 tmp_json['licenses'] = NEW_VERSION_DATA[key]['license'][:]
                 lic_json['packages'].append(tmp_json)
 
+            print(lic_json)
             is_conflict = check_license_conflict(lic_json)
 
             if is_conflict == "true":
@@ -249,22 +250,22 @@ def generate_notification_payload():
                          "id": str(uuid4()),
                          "type": "notifications"
             }
-            tmp_json['data']['attributes']['custom']['repo_url'] = data.encode('ascii')
-            tmp_json['data']['attributes']['id'] = data.encode('ascii')
+            tmp_json['data']['attributes']['custom']['repo_url'] = data
+            tmp_json['data']['attributes']['id'] = data
             tmp_json['data']['attributes']['custom']['version_updates'] = repo_data['version_updates']
             final_payload.append(tmp_json)
-    print "<---Repo Data--->"
-    print REPO_DATA
-    print "<---Package Data--->"
-    print PACKAGE_DATA
-    print "<---New Version Data--->"
-    print NEW_VERSION_DATA
-    print "<---Version Data--->"
-    print VERSION_DATA
-    print "<---Final Data--->"
-    print FINAL_DATA
-    print "<-------------Payload for Notification------------->"
-    print final_payload
+    print("<---Repo Data--->")
+    print(REPO_DATA)
+    print("<---Package Data--->")
+    print(PACKAGE_DATA)
+    print("<---New Version Data--->")
+    print(NEW_VERSION_DATA)
+    print("<---Version Data--->")
+    print(VERSION_DATA)
+    print("<---Final Data--->")
+    print(FINAL_DATA)
+    print("<-------------Payload for Notification------------->")
+    print(final_payload)
 
 
 if __name__ == "__main__":
