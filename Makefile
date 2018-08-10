@@ -1,5 +1,5 @@
 REGISTRY?= registry.devshift.net
-REPOSITORY?= fabric8 - analytics / f8a - analytics - notification
+REPOSITORY?= fabric8-analytics/ f8a-analytics-notification
 DEFAULT_TAG = latest
 
 ifeq($(TARGET), rhel)
