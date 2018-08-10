@@ -24,7 +24,7 @@ objects:
             containers:
             - name: f8a-notification-scheduler
               image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
-            restartPolicy:  OnFailure
+            restartPolicy:  Never
 parameters:
 - description: Docker registry
   displayName: Docker registry
