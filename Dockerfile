@@ -10,7 +10,9 @@ RUN yum install -y epel-release &&\
     yum clean all &&\
     mkdir -p ${APP_DIR}
 
+RUN pip3 install --upgrade pip
 
 COPY f8a_notification/ ${APP_DIR}/f8a_notification
-
-CMD ["python", "f8a_notification/entryscript.py"]
+COPY requirements.txt ${APP_DIR}
+RUN pip3 install -r requirements.txt
+CMD ["python3", "f8a_notification/entryscript.py"]
