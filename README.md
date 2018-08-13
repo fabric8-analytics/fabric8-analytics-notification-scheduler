@@ -1,5 +1,47 @@
 # fabric8-analytics-notification-scheduler
 
+# Developing fabric8-analytics-notification-scheduler
+
+This section is for those interested in contributing to the development of
+fabric8-analytics-notification-scheduler.
+
+## Running a Local Instance
+
+### Getting fabric8-analytics-notification-scheduler repository
+
+### Requirements
+
+Git, and possibly other packages, depending on how you want to run the system
+(see below).
+
+### Getting the Code
+
+First of all, clone the `fabric8-analytics-notification-scheduler` repo (this one).
+This includes all the configuration for running the whole system as well as some helper
+scripts and docs.
+
+### Running via docker
+
+Requirements:
+
+* docker >= 1.10.0
+
+Fedora 24, 25 and 26 have docker-compose > 1.6 and docker > 1.10.0. You should be
+able to run on Fedora 24/25/26 without any workarounds.
+
+Then run:
+
+```
+$ docker build . -t <username>/notify
+```
+```
+$ docker run <username>/notify
+```
+
+### Running in OpenShift
+
+For running in openshift refer to [README in openshift directory](./openshift/README.md)
+
 ## Usage
 
 ## Installation
