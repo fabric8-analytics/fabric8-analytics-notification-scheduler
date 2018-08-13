@@ -1,7 +1,6 @@
 #!/bin/bash -ex
 
 REGISTRY="push.registry.devshift.net"
-REGISTRY="push.registry.devshift.net"
 
 load_jenkins_vars() {
     if [ -e "jenkins-env" ]; then
@@ -12,7 +11,6 @@ load_jenkins_vars() {
         source ~/.jenkins-env
     fi
 }
-
 
 docker_login() {
     if [ -n "${DEVSHIFT_USERNAME}" -a -n "${DEVSHIFT_PASSWORD}" ]; then
@@ -35,40 +33,10 @@ build_image() {
 }
 
 tag_push() {
-    local target =$1
-    local source =$2
+    local target=$1
+    local source=$2
     docker tag "${source}" "${target}"
     docker push "${target}"
-}
-
-push_image() {
-    local image_name
-    local image_repository
-    local short_commit
-    image_name =$(make get - image - name)
-    image_repository =$(make get - image - repository)
-    short_commit =$(git rev - parse - -short=7 HEAD)
-
-    if ["$TARGET" = "rhel"]
-    then
-    IMAGE_URL = "${REGISTRY}/osio-prod/${image_repository}"
-    else
-    IMAGE_URL = "${REGISTRY}/${image_repository}"
-    fi
-
-    if [-n "${ghprbPullId}"]
-    then
-    # PR build
-    pr_id = "SNAPSHOT-PR-${ghprbPullId}"
-    tag_push "${IMAGE_URL}:${pr_id}" "${image_name}"
-    tag_push "${IMAGE_URL}:${pr_id}-${short_commit}" "${image_name}"
-    else
-    # master branch build
-    tag_push "${IMAGE_URL}:latest" "${image_name}"
-    tag_push "${IMAGE_URL}:${short_commit}" "${image_name}"
-    fi
-
-    echo 'CICO: Image pushed, ready to update deployed app'
 }
 
 push_image() {

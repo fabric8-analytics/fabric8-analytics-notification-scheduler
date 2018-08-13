@@ -37,7 +37,7 @@ parameters:
   displayName: Docker image
   required: true
   name: DOCKER_IMAGE
-  value: "fabric8-analytics/f8a-notification"
+  value: "fabric8-analytics/f8a-notification-scheduler"
     
 - description: Image tag
   displayName: Image tag
