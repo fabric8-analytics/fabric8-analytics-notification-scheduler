@@ -1,7 +1,7 @@
 apiVersion: v1     
 kind: Template
 labels:
-  template: f8a-notification
+  template: f8a-notification-scheduler
 metadata:
   name: f8a-notification
   annotations:
@@ -23,7 +23,8 @@ objects:
           spec: 
             containers:
             - name: f8a-notification-scheduler
-              image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+              # image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+              image: registry.hub.docker.com/gb21/yusuf_notify:latest
             restartPolicy:  Never
 parameters:
 - description: Docker registry
