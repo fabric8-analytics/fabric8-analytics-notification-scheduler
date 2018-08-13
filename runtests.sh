@@ -1,36 +1,34 @@
 #!/bin/bash
 
-set - e
-set - x
+set -e
+set -x
 
-here =$(cd "$( dirname "${BASH_SOURCE[0]}" )" & & pwd)
+here=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 
 # test coverage threshold
-COVERAGE_THRESHOLD = 25
+COVERAGE_THRESHOLD=25
 
-TIMESTAMP = "$(date +%F-%H-%M-%S)"
-
-POSTGRES_IMAGE_NAME = "registry.centos.org/centos/postgresql-94-centos7:latest"
+TIMESTAMP="$(date +%F-%H-%M-%S)"
 
 gc() {
-  retval =$?
+  retval=$?
   deactivate
-  rm - rf venv /
+  rm -rf venv/
   exit $retval
 }
 
 trap gc EXIT SIGINT
 
 function prepare_venv() {
-    VIRTUALENV =$(which virtualenv) | |:
-    if [-z "$VIRTUALENV"]
+    VIRTUALENV=$(which virtualenv) || :
+    if [ -z "$VIRTUALENV" ]
     then
         # python34 which is in CentOS does not have virtualenv binary
-        VIRTUALENV =$(which virtualenv - 3)
+        VIRTUALENV=$(which virtualenv-3)
     fi
 
-    ${VIRTUALENV} - p python3 venv & & source venv / bin / activate
-    if [$? -ne 0]
+    ${VIRTUALENV} -p python3 venv && source venv/bin/activate
+    if [ $? -ne 0 ]
     then
         printf "%sPython virtual environment can't be initialized%s" "${RED}" "${NORMAL}"
         exit 1
@@ -38,9 +36,8 @@ function prepare_venv() {
 }
 
 prepare_venv
-pip3 install - r tests / requirements.txt
+pip3 install -r tests/requirements.txt
 
-
-python3 "$(which pytest)" - -cov = f8a_notification / --cov - report term - missing - -cov - fail - under =$COVERAGE_THRESHOLD - vv tests
+python3 "$(which pytest)" --cov=f8a_notification/ --cov-report term-missing --cov-fail-under=$COVERAGE_THRESHOLD -vv tests
 
 echo "Test suite passed \\o/"

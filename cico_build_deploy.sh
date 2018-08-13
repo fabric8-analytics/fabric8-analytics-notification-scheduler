@@ -1,6 +1,7 @@
+
 #!/bin/bash
 
-set - ex
+set -ex
 
 . cico_setup.sh
 
