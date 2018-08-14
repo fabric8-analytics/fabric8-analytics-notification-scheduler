@@ -1,0 +1,46 @@
+apiVersion: v1     
+kind: Template
+labels:
+  template: fabric8-analytics-notification-scheduler
+metadata:
+  name: fabric8-analytics-notification-scheduler
+  annotations:
+    description: fabric8-analytics-notification-scheduler
+objects:
+- apiVersion:  batch/v1beta1
+  kind: CronJob
+  metadata:
+    name: fabric8-analytics-notification-scheduler
+    annotations:
+      description: fabric8-analytics-notification-scheduler
+  spec:
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 1
+    schedule: "*/1 * * * *"  
+    jobTemplate:             
+      spec:
+        template:
+          spec: 
+            containers:
+            - name: fabric8-analytics-notification-scheduler
+              image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+            restartPolicy:  Never
+parameters:
+- description: Docker registry
+  displayName: Docker registry
+  required: true
+  name: DOCKER_REGISTRY
+  value: "registry.devshift.net"
+
+- description: Docker image
+  displayName: Docker image
+  required: true
+  name: DOCKER_IMAGE
+  value: "fabric8-analytics/fabric8-analytis-notification-scheduler"
+    
+- description: Image tag
+  displayName: Image tag
+  required: true
+  name: IMAGE_TAG
+  value: "latest"
+

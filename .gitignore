@@ -1,0 +1,8 @@
+notify/
+openshift/env.sh
+venv/
+.coverage
+.pytest_cache/
+f8a_notification/__pycache__/
+tests/__pycache__/
+*.pyc
