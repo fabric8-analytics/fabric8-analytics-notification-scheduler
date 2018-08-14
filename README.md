@@ -32,7 +32,7 @@ able to run on Fedora 24/25/26 without any workarounds.
 Then run:
 
 ```
-$ docker build . -t <username>/notify
+$ make docker-build
 ```
 ```
 $ docker run <username>/notify
