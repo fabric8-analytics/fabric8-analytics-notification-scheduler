@@ -1,18 +1,18 @@
 apiVersion: v1     
 kind: Template
 labels:
-  template: f8a-notification-scheduler
+  template: fabric8-analytics-notification-scheduler
 metadata:
-  name: f8a-notification
+  name: fabric8-analytics-notification-scheduler
   annotations:
-    description: f8a-notification
+    description: fabric8-analytics-notification-scheduler
 objects:
-- apiVersion:  batch/v2alpha1
+- apiVersion:  batch/v1beta1
   kind: CronJob
   metadata:
-    name: f8a-notification-scheduler
+    name: fabric8-analytics-notification-scheduler
     annotations:
-      description: f8a-notification-scheduler
+      description: fabric8-analytics-notification-scheduler
   spec:
     successfulJobsHistoryLimit: 1
     failedJobsHistoryLimit: 1
@@ -22,9 +22,8 @@ objects:
         template:
           spec: 
             containers:
-            - name: f8a-notification-scheduler
-              # image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
-              image: registry.hub.docker.com/gb21/yusuf_notify:latest
+            - name: fabric8-analytics-notification-scheduler
+              image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
             restartPolicy:  Never
 parameters:
 - description: Docker registry
@@ -37,7 +36,7 @@ parameters:
   displayName: Docker image
   required: true
   name: DOCKER_IMAGE
-  value: "fabric8-analytics/f8a-notification-scheduler"
+  value: "fabric8-analytics/fabric8-analytis-notification-scheduler"
     
 - description: Image tag
   displayName: Image tag

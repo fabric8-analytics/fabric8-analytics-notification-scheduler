@@ -1,5 +1,5 @@
 REGISTRY?=registry.devshift.net
-REPOSITORY?=fabric8-analytics/f8a-analytics-notification-scheduler
+REPOSITORY?=fabric8-analytics/fabric8-analytics-notification-scheduler
 DEFAULT_TAG=latest
 
 ifeq ($(TARGET),rhel)
