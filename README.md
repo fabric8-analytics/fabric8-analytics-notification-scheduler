@@ -22,13 +22,6 @@ scripts and docs.
 
 ### Running via docker
 
-Requirements:
-
-* docker >= 1.10.0
-
-Fedora 24, 25 and 26 have docker-compose > 1.6 and docker > 1.10.0. You should be
-able to run on Fedora 24/25/26 without any workarounds.
-
 Then run:
 
 ```
