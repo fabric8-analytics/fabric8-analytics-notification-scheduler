@@ -22,6 +22,15 @@ objects:
         template:
           spec: 
             containers:
+            env:
+            - name: BAYESIAN_GREMLIN_HTTP_SERVICE_HOST
+              value: bayesian-gremlin-http
+            - name: BAYESIAN_GREMLIN_HTTP_SERVICE_PORT
+              value: "8182"
+            - name: LICENSE_SERVICE_HOST
+              value: f8a-license-analysis
+            - name: LICENSE_SERVICE_PORT
+              value: "6162"
             - name: fabric8-analytics-notification-scheduler
               image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
             restartPolicy:  Never
@@ -36,7 +45,7 @@ parameters:
   displayName: Docker image
   required: true
   name: DOCKER_IMAGE
-  value: "fabric8-analytics/fabric8-analytis-notification-scheduler"
+  value: "fabric8-analytics/fabric8-analytics-notification-scheduler"
     
 - description: Image tag
   displayName: Image tag
