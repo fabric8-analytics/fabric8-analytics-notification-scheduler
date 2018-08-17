@@ -1,0 +1,19 @@
+# base image source https://github.com/rhdt/EL-Dockerfiles/blob/master/base/python3/Dockerfile
+
+FROM quay.io/openshiftio/rhel-base-python3:latest
+ENV APP_DIR='/f8a_notification'
+
+
+WORKDIR ${APP_DIR}
+
+RUN mkdir -p ${APP_DIR}
+
+RUN pip3 install --upgrade pip
+
+COPY f8a_notification/ ${APP_DIR}/f8a_notification
+
+COPY requirements.txt ${APP_DIR}
+
+RUN pip3 install -r requirements.txt
+
+CMD ["python3", "f8a_notification/entryscript.py"]
