@@ -36,6 +36,8 @@ function prepare_venv() {
 }
 
 prepare_venv
+pip3 install -r requirements.txt
+
 pip3 install -r tests/requirements.txt
 
 python3 "$(which pytest)" --cov=f8a_notification/ --cov-report term-missing --cov-fail-under=$COVERAGE_THRESHOLD -vv tests
