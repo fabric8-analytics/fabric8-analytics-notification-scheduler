@@ -36,8 +36,9 @@ class UserNotification:
         url = os.getenv('NOTIFICATION_SERVICE_HOST', '').strip()
         endpoint = '{url}/api/notify'.format(url=url)
         auth = 'Bearer {token}'.format(token=token)
-        resp = requests.post(endpoint, json=notification, headers={'Authorization': auth})
-        if resp.status_code != 202:
-            raise resp.raise_for_status()
+        for notify_ in notification:
+            resp = requests.post(endpoint, json=notify_, headers={'Authorization': auth})
+            if resp.status_code != 202:
+                raise resp.raise_for_status()
 
         return {'status': 'success'}

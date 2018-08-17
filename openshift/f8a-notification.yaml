@@ -31,8 +31,8 @@ objects:
               value: f8a-license-analysis
             - name: LICENSE_SERVICE_PORT
               value: "6162"
-            - name: fabric8-analytics-notification-scheduler
-              image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+            image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+            name: fabric8-analytics-notification-scheduler
             restartPolicy:  Never
 parameters:
 - description: Docker registry
