@@ -6,7 +6,7 @@ set -x
 here=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 
 # test coverage threshold
-COVERAGE_THRESHOLD=25
+COVERAGE_THRESHOLD=0
 
 TIMESTAMP="$(date +%F-%H-%M-%S)"
 
@@ -34,7 +34,8 @@ function prepare_venv() {
         exit 1
     fi
 }
-
+PYTHONPATH=$(pwd)/f8a_notification/
+export PYTHONPATH
 prepare_venv
 pip3 install -r requirements.txt
 
