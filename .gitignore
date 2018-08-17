@@ -6,3 +6,4 @@ venv/
 f8a_notification/__pycache__/
 tests/__pycache__/
 *.pyc
+.vscode/
