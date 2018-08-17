@@ -273,6 +273,7 @@ def generate_notification_payload():
                             "attributes": {
                                 "custom": {
                                     "repo_url": "",
+                                    "scanned_at" : datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                                     "version_updates": []
                                 },
                                 "id": "",
@@ -288,13 +289,24 @@ def generate_notification_payload():
             tmp_json['data']['attributes']['custom']['version_updates'] \
                 = repo_data['version_updates']
             final_payload.append(tmp_json)
+            print("<---Repo Data--->")
+            print(REPO_DATA)
+            print("<---Package Data--->")
+            print(PACKAGE_DATA)
+            print("<---New Version Data--->")
+            print(NEW_VERSION_DATA)
+            print("<---Version Data--->")
+            print(VERSION_DATA)
+            print("<---Final Data--->")
+            print(FINAL_DATA)
+            print("<-------------Payload for Notification------------->")
+            print(final_payload)
 
     try:
         auth_ = Authentication.init_auth_sa_token()
         if auth_ is not None:
             notify_ = un.send_notification(final_payload, auth_)
     except Exception as e:
-        print(str(e))
         logger.info(str(e))
         sys.exit()
 
