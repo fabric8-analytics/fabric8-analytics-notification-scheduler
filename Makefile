@@ -1,12 +1,13 @@
-REGISTRY?=registry.devshift.net
-REPOSITORY?=fabric8-analytics/fabric8-analytics-notification-scheduler
-DEFAULT_TAG=latest
-
 ifeq ($(TARGET),rhel)
-    DOCKERFILE := Dockerfile.rhel
+  DOCKERFILE := Dockerfile.rhel
+  REPOSITORY := openshiftio/rhel-fabric8-analytics-notification-scheduler
 else
-    DOCKERFILE := Dockerfile
+  DOCKERFILE := Dockerfile
+  REPOSITORY := openshiftio/fabric8-analytics-notification-scheduler
 endif
+
+REGISTRY := quay.io
+DEFAULT_TAG=latest
 
 .PHONY: all docker-build fast-docker-build test get-image-name get-image-repository
 
@@ -26,3 +27,6 @@ get-image-name:
 
 get-image-repository:
 	@echo $(REPOSITORY)
+
+get-push-registry:
+	@echo $(REGISTRY)

@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-REGISTRY="quay.io"
+REGISTRY=$(make get-push-registry)
 
 load_jenkins_vars() {
     if [ -e "jenkins-env.json" ]; then
@@ -36,6 +36,8 @@ prep() {
 }
 
 build_image() {
+    # login before build to be able to pull RHEL parent image
+    docker_login
     make docker-build
 }
 
@@ -53,22 +55,19 @@ push_image() {
     image_name=$(make get-image-name)
     image_repository=$(make get-image-repository)
     short_commit=$(git rev-parse --short=7 HEAD)
+    push_registry=$(make get-push-registry)
 
-    if [ "$TARGET" = "rhel" ]; then
-        IMAGE_URL="${REGISTRY}/osio-prod/${image_repository}"
-    else
-        IMAGE_URL="${REGISTRY}/${image_repository}"
-    fi
+    docker_login
 
     if [ -n "${ghprbPullId}" ]; then
         # PR build
         pr_id="SNAPSHOT-PR-${ghprbPullId}"
-        tag_push "${IMAGE_URL}:${pr_id}" "${image_name}"
-        tag_push "${IMAGE_URL}:${pr_id}-${short_commit}" "${image_name}"
+        tag_push "${push_registry}/${image_repository}:${pr_id}" "${image_name}"
+        tag_push "${push_registry}/${image_repository}:${pr_id}-${short_commit}" "${image_name}"
     else
         # master branch build
-        tag_push "${IMAGE_URL}:latest" "${image_name}"
-        tag_push "${IMAGE_URL}:${short_commit}" "${image_name}"
+        tag_push "${push_registry}/${image_repository}:latest" "${image_name}"
+        tag_push "${push_registry}/${image_repository}:${short_commit}" "${image_name}"
     fi
 
     echo 'CICO: Image pushed, ready to update deployed app'
