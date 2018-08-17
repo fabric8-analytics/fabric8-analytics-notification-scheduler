@@ -74,9 +74,8 @@ def read_packages():
     gremlin_response = execute_gremlin_dsl(payload)
     result_data = get_response_data(gremlin_response, [{0: 0}])
 
-    tmp_json = {}
     for result in result_data:
-        tmp_json.clear()
+        tmp_json = {}
         tmp_json['latest'] = get_value(result, 'latest_version')
         tmp_json['libio'] = get_value(result, 'libio_latest_version')
         eco = get_value(result, 'ecosystem')
@@ -95,10 +94,14 @@ def remove_cve_versions():
     eco_lst = []
     license_lst = []
     for pkg in PACKAGE_DATA:
-        pkg_list.append(PACKAGE_DATA[pkg]['name'])
-        ver_list.append(PACKAGE_DATA[pkg]['latest'])
-        ver_list.append(PACKAGE_DATA[pkg]['libio'])
-        eco_lst.append(PACKAGE_DATA[pkg]['ecosystem'])
+        if not PACKAGE_DATA[pkg]['name'] in pkg_list:
+            pkg_list.append(PACKAGE_DATA[pkg]['name'])
+        if not PACKAGE_DATA[pkg]['latest'] in ver_list:
+            ver_list.append(PACKAGE_DATA[pkg]['latest'])
+        if not PACKAGE_DATA[pkg]['libio'] in ver_list:
+            ver_list.append(PACKAGE_DATA[pkg]['libio'])
+        if not PACKAGE_DATA[pkg]['ecosystem'] in eco_lst:
+            eco_lst.append(PACKAGE_DATA[pkg]['ecosystem'])
 
     query_str = "g.V().has('pecosystem',within(eco_lst))." \
                 "has('pname',within(pkg_list))" \
@@ -111,6 +114,7 @@ def remove_cve_versions():
             'eco_lst': eco_lst
         }
     }
+
     gremlin_response = execute_gremlin_dsl(payload)
     result_data = get_response_data(gremlin_response, [{0: 0}])
 
@@ -128,13 +132,14 @@ def remove_cve_versions():
                 del PACKAGE_DATA[eco + ":" + name]
         else:
             del license_lst[:]
-            for lic in result['licenses']:
-                license_lst.append(lic)
-            key = eco + ":" + name + ":" + ver
-            NEW_VERSION_DATA[key] = {}
-            NEW_VERSION_DATA[key]['version'] = ver
-            NEW_VERSION_DATA[key]['package'] = eco + ":" + name
-            NEW_VERSION_DATA[key]['license'] = license_lst
+            if 'licenses' in result:
+                for lic in result['licenses']:
+                    license_lst.append(lic)
+                key = eco + ":" + name + ":" + ver
+                NEW_VERSION_DATA[key] = {}
+                NEW_VERSION_DATA[key]['version'] = ver
+                NEW_VERSION_DATA[key]['package'] = eco + ":" + name
+                NEW_VERSION_DATA[key]['license'] = license_lst
 
 
 def get_repos():
@@ -176,17 +181,18 @@ def get_repos():
     for result in result_data:
         repo = get_value(result['a'], 'repo_url')
         del license_lst[:]
-        licenses = result['b']['licenses']
-        for lic in licenses:
-            license_lst.append(lic)
-        eco = get_value(result['b'], 'pecosystem')
-        name = get_value(result['b'], 'pname')
-        version = get_value(result['b'], 'version')
-        key = eco + ":" + name + ":" + version
-        VERSION_DATA[key] = {}
-        VERSION_DATA[key]['version'] = version
-        VERSION_DATA[key]['package'] = eco + ":" + name
-        VERSION_DATA[key]['license'] = license_lst
+        if 'licenses' in result['b']:
+            licenses = result['b']['licenses']
+            for lic in licenses:
+                license_lst.append(lic)
+            eco = get_value(result['b'], 'pecosystem')
+            name = get_value(result['b'], 'pname')
+            version = get_value(result['b'], 'version')
+            key = eco + ":" + name + ":" + version
+            VERSION_DATA[key] = {}
+            VERSION_DATA[key]['version'] = version
+            VERSION_DATA[key]['package'] = eco + ":" + name
+            VERSION_DATA[key]['license'] = license_lst
         if repo not in REPO_DATA:
             REPO_DATA[repo] = {}
         REPO_DATA[repo]['ecosystem'] = eco
@@ -273,7 +279,7 @@ def generate_notification_payload():
                             "attributes": {
                                 "custom": {
                                     "repo_url": "",
-                                    "scanned_at" : datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                                    "scanned_at": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                                     "version_updates": []
                                 },
                                 "id": "",
