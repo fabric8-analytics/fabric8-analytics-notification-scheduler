@@ -279,7 +279,7 @@ def generate_notification_payload():
                             "attributes": {
                                 "custom": {
                                     "repo_url": "",
-                                    "scanned_at" : datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                                    "scanned_at": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                                     "version_updates": []
                                 },
                                 "id": "",
