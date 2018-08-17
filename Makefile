@@ -1,4 +1,4 @@
-ifeq ($(TARGET),rhel)
+ifeq ($(TARGET),rhelX)
   DOCKERFILE := Dockerfile.rhel
   REPOSITORY := openshiftio/rhel-fabric8-analytics-notification-scheduler
 else
@@ -6,7 +6,7 @@ else
   REPOSITORY := openshiftio/fabric8-analytics-notification-scheduler
 endif
 
-REGISTRY := quay.io
+REGISTRY := registry.devshift.net
 DEFAULT_TAG=latest
 
 .PHONY: all docker-build fast-docker-build test get-image-name get-image-repository

@@ -8,6 +8,8 @@ load_jenkins_vars() {
                 DEVSHIFT_TAG_LEN \
                 QUAY_USERNAME \
                 QUAY_PASSWORD \
+                DEVSHIFT_USERNAME \
+                DEVSHIFT_PASSWORD \
                 JENKINS_URL \
                 GIT_BRANCH \
                 GIT_COMMIT \
@@ -58,6 +60,16 @@ push_image() {
     push_registry=$(make get-push-registry)
 
     docker_login
+
+    push_registry="push.registry.devshift.net"
+
+    # login first
+    if [ -n "${DEVSHIFT_USERNAME}" -a -n "${DEVSHIFT_PASSWORD}" ]; then
+        docker login -u "${DEVSHIFT_USERNAME}" -p "${DEVSHIFT_PASSWORD}" "${push_registry}"
+    else
+        echo "Could not login, missing credentials for the registry"
+        exit 1
+    fi
 
     if [ -n "${ghprbPullId}" ]; then
         # PR build
