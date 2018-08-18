@@ -72,7 +72,11 @@ def read_packages():
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch packages : read_package")
+        sys.exit()
 
     for result in result_data:
         tmp_json = {}
@@ -116,7 +120,11 @@ def remove_cve_versions():
     }
 
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch versions : remove_cve_versions")
+        sys.exit()
 
     for result in result_data:
         name = get_value(result, 'pname')
@@ -162,7 +170,11 @@ def get_repos():
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch repo info : get_repos")
+        sys.exit()
     repo_list = []
     for data in result_data:
         repo_list.append(get_value(data, 'repo_url'))
@@ -176,7 +188,11 @@ def get_repos():
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch repo and version info : get_repos")
+        sys.exit()
 
     for result in result_data:
         repo = get_value(result['a'], 'repo_url')

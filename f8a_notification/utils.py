@@ -29,12 +29,12 @@ import logging
 import os
 
 GREMLIN_SERVER_URL_REST = "http://{host}:{port}".format(
-    host=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_HOST"),
-    port=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_PORT"))
+    host=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_HOST", "localhost"),
+    port=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_PORT", "8182"))
 
 LICENSE_SCORING_URL_REST = "http://{host}:{port}".format(
-    host=os.environ.get("LICENSE_SERVICE_HOST"),
-    port=os.environ.get("LICENSE_SERVICE_PORT"))
+    host=os.environ.get("LICENSE_SERVICE_HOST", "localhost"),
+    port=os.environ.get("LICENSE_SERVICE_PORT", "6162"))
 
 zero_version = sv.Version("0.0.0")
 logger = logging.getLogger(__name__)
@@ -154,6 +154,7 @@ def get_response_data(json_response, data_default):
 
 def execute_gremlin_dsl(payloads):
     """Execute the gremlin query and return the response."""
+    print(GREMLIN_SERVER_URL_REST)
     try:
         resp = get_session_retry().post(GREMLIN_SERVER_URL_REST,
                                         data=json.dumps(payloads))

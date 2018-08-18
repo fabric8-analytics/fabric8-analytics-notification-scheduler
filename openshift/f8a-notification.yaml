@@ -20,20 +20,21 @@ objects:
     jobTemplate:             
       spec:
         template:
-          spec: 
+          spec:
+            restartPolicy:  Never
             containers:
             - name: f8a-notification-scheduler
               image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
-            env:
-            - name: BAYESIAN_GREMLIN_HTTP_SERVICE_HOST
-              value: bayesian-gremlin-http
-            - name: BAYESIAN_GREMLIN_HTTP_SERVICE_PORT
-              value: "8182"
-            - name: LICENSE_SERVICE_HOST
-              value: f8a-license-analysis
-            - name: LICENSE_SERVICE_PORT
-              value: "6162"
-            restartPolicy:  Never
+              env:
+              - name: BAYESIAN_GREMLIN_HTTP_SERVICE_HOST
+                value: bayesian-gremlin-http
+              - name: BAYESIAN_GREMLIN_HTTP_SERVICE_PORT
+                value: "8182"
+              - name: LICENSE_SERVICE_HOST
+                value: f8a-license-analysis
+              - name: LICENSE_SERVICE_PORT
+                value: "6162"
+
 parameters:
 - description: Docker registry
   displayName: Docker registry
