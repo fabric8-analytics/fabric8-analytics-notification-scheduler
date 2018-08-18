@@ -67,14 +67,16 @@ def read_packages():
     print("read_packages() started")
     prev_date = (datetime.utcnow() - timedelta(1)).strftime('%Y%m%d')
     query_str = "g.V().has('latest_version_last_updated',prev_date).valueMap()"
-    # prev_date = '20180805' for testing purpose, change date here
+    prev_date = '20180816'  # for testing purpose, change date here
     payload = {
         'gremlin': query_str,
         'bindings': {
             'prev_date': prev_date
         }
     }
+    print(payload)
     gremlin_response = execute_gremlin_dsl(payload)
+    print(gremlin_response)
     if gremlin_response is not None:
         result_data = get_response_data(gremlin_response, [{0: 0}])
     else:
@@ -324,18 +326,18 @@ def generate_notification_payload():
             tmp_json['data']['attributes']['custom']['version_updates'] \
                 = repo_data['version_updates']
             final_payload.append(tmp_json)
-            print("<---Repo Data--->")
-            print(REPO_DATA)
-            print("<---Package Data--->")
-            print(PACKAGE_DATA)
-            print("<---New Version Data--->")
-            print(NEW_VERSION_DATA)
-            print("<---Version Data--->")
-            print(VERSION_DATA)
-            print("<---Final Data--->")
-            print(FINAL_DATA)
-            print("<-------------Payload for Notification------------->")
-            print(final_payload)
+    print("<---Repo Data--->")
+    print(REPO_DATA)
+    print("<---Package Data--->")
+    print(PACKAGE_DATA)
+    print("<---New Version Data--->")
+    print(NEW_VERSION_DATA)
+    print("<---Version Data--->")
+    print(VERSION_DATA)
+    print("<---Final Data--->")
+    print(FINAL_DATA)
+    print("<-------------Payload for Notification------------->")
+    print(final_payload)
 
     try:
         auth_ = Authentication.init_auth_sa_token()
