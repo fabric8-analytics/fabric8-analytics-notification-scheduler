@@ -29,12 +29,12 @@ import logging
 import os
 
 GREMLIN_SERVER_URL_REST = "http://{host}:{port}".format(
-    host=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_HOST"),
-    port=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_PORT"))
+    host=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_HOST", "localhost"),
+    port=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_PORT", "8182"))
 
 LICENSE_SCORING_URL_REST = "http://{host}:{port}".format(
-    host=os.environ.get("LICENSE_SERVICE_HOST"),
-    port=os.environ.get("LICENSE_SERVICE_PORT"))
+    host=os.environ.get("LICENSE_SERVICE_HOST", "localhost"),
+    port=os.environ.get("LICENSE_SERVICE_PORT", "6162"))
 
 zero_version = sv.Version("0.0.0")
 logger = logging.getLogger(__name__)

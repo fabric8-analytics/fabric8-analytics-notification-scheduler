@@ -51,6 +51,7 @@ def get_value(json, property):
 def run():
     """Entrypoint function."""
     logger.info("Scheduled scan for newer versions started")
+    print("Scheduled scan for newer versions started")
     read_packages()
     remove_cve_versions()
     get_repos()
@@ -58,21 +59,29 @@ def run():
     check_license_compatibility()
     generate_notification_payload()
     logger.info("Scheduled scan for newer versions finished")
+    print("Scheduled scan for newer versions finished")
 
 
 def read_packages():
     """Read all the packages last updated."""
+    print("read_packages() started")
     prev_date = (datetime.utcnow() - timedelta(1)).strftime('%Y%m%d')
     query_str = "g.V().has('latest_version_last_updated',prev_date).valueMap()"
-    # prev_date = '20180805' for testing purpose, change date here
+    prev_date = '20180816'  # for testing purpose, change date here
     payload = {
         'gremlin': query_str,
         'bindings': {
             'prev_date': prev_date
         }
     }
+    print(payload)
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    print(gremlin_response)
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch packages : read_package")
+        sys.exit()
 
     for result in result_data:
         tmp_json = {}
@@ -85,10 +94,12 @@ def read_packages():
         tmp_json['name'] = name
         tmp_json['ecosystem'] = eco
         PACKAGE_DATA[eco + ":" + name] = tmp_json
+    print("read_packages() ended")
 
 
 def remove_cve_versions():
     """Remove CVE versions."""
+    print("remove_cve_versions() started")
     pkg_list = []
     ver_list = []
     eco_lst = []
@@ -116,7 +127,11 @@ def remove_cve_versions():
     }
 
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch versions : remove_cve_versions")
+        sys.exit()
 
     for result in result_data:
         name = get_value(result, 'pname')
@@ -140,10 +155,12 @@ def remove_cve_versions():
                 NEW_VERSION_DATA[key]['version'] = ver
                 NEW_VERSION_DATA[key]['package'] = eco + ":" + name
                 NEW_VERSION_DATA[key]['license'] = license_lst
+    print("remove_cve_versions() ended")
 
 
 def get_repos():
     """Read all the repo data."""
+    print("get_repos() started")
     pkg_list = []
     license_lst = []
     eco_lst = []
@@ -162,7 +179,11 @@ def get_repos():
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch repo : get_repos")
+        sys.exit()
     repo_list = []
     for data in result_data:
         repo_list.append(get_value(data, 'repo_url'))
@@ -176,7 +197,11 @@ def get_repos():
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
-    result_data = get_response_data(gremlin_response, [{0: 0}])
+    if gremlin_response is not None:
+        result_data = get_response_data(gremlin_response, [{0: 0}])
+    else:
+        print("Exception occured while trying to fetch versions : get_repos")
+        sys.exit()
 
     for result in result_data:
         repo = get_value(result['a'], 'repo_url')
@@ -201,10 +226,12 @@ def get_repos():
         key = eco + ":" + name + ":" + version
         if key not in REPO_DATA[repo]['dependencies']:
             REPO_DATA[repo]['dependencies'].append(key)
+    print("get_repos() ended")
 
 
 def find_latest_version():
     """Find the latest version."""
+    print("find_latest_version() started")
     tmp_lst = []
     for repo in REPO_DATA:
         del tmp_lst[:]
@@ -237,10 +264,12 @@ def find_latest_version():
                     tmp_json['latest_version'] = latest_version
                     tmp_lst.append(tmp_json)
         FINAL_DATA[repo]['version_updates'] = tmp_lst[:]
+    print("find_latest_version() ended")
 
 
 def check_license_compatibility():
     """Check the license compatibility."""
+    print("check_license_compatibility() started")
     for repo in REPO_DATA:
         lic_json = {}
         if FINAL_DATA[repo]['notify'] == 'true':
@@ -267,10 +296,12 @@ def check_license_compatibility():
 
             if is_conflict == "true":
                 FINAL_DATA[repo]['notify'] = 'false'
+    print("check_license_compatibility() ended")
 
 
 def generate_notification_payload():
     """Generate the final payload."""
+    print("generate_notification_payload() started")
     final_payload = []
     for data in FINAL_DATA:
         repo_data = FINAL_DATA[data]
@@ -295,26 +326,28 @@ def generate_notification_payload():
             tmp_json['data']['attributes']['custom']['version_updates'] \
                 = repo_data['version_updates']
             final_payload.append(tmp_json)
-            print("<---Repo Data--->")
-            print(REPO_DATA)
-            print("<---Package Data--->")
-            print(PACKAGE_DATA)
-            print("<---New Version Data--->")
-            print(NEW_VERSION_DATA)
-            print("<---Version Data--->")
-            print(VERSION_DATA)
-            print("<---Final Data--->")
-            print(FINAL_DATA)
-            print("<-------------Payload for Notification------------->")
-            print(final_payload)
+    print("<---Repo Data--->")
+    print(REPO_DATA)
+    print("<---Package Data--->")
+    print(PACKAGE_DATA)
+    print("<---New Version Data--->")
+    print(NEW_VERSION_DATA)
+    print("<---Version Data--->")
+    print(VERSION_DATA)
+    print("<---Final Data--->")
+    print(FINAL_DATA)
+    print("<-------------Payload for Notification------------->")
+    print(final_payload)
 
     try:
         auth_ = Authentication.init_auth_sa_token()
         if auth_ is not None:
             notify_ = un.send_notification(final_payload, auth_)
+            print(notify_)
     except Exception as e:
         logger.info(str(e))
         sys.exit()
+    print("generate_notification_payload() ended")
 
 
 if __name__ == "__main__":
