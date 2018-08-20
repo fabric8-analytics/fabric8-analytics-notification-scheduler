@@ -338,11 +338,13 @@ def generate_notification_payload():
     print(FINAL_DATA)
     print("<-------------Payload for Notification------------->")
     print(final_payload)
-
     try:
         auth_ = Authentication.init_auth_sa_token()
+        print("<------------AUTH------------->")
+        print(auth_)
         if auth_ is not None:
             notify_ = un.send_notification(final_payload, auth_)
+            print("<------------NOTIFY------------>")
             print(notify_)
     except Exception as e:
         logger.info(str(e))

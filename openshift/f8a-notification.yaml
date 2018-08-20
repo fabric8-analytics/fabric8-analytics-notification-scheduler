@@ -34,6 +34,26 @@ objects:
                   value: f8a-license-analysis
                 - name: LICENSE_SERVICE_PORT
                   value: "6162"
+                - name: GEMINI_SA_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: gemini-server
+                      key: gemini-sa-client-id
+                - name: GEMINI_SA_CLIENT_SECRET
+                  valueFrom:
+                   secretKeyRef:
+                    name: gemini-server
+                    key: gemini-sa-client-secret
+                - name: AUTH_SERVICE_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: bayesian-config
+                      key: auth-url
+                - name: NOTIFICATION_SERVICE_HOST
+                  valueFrom:
+                  configMapKeyRef:
+                    name: bayesian-config
+                    key: notification-url
 parameters:
 - description: Docker registry
   displayName: Docker registry
