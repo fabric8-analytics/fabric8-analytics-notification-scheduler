@@ -32,13 +32,18 @@ class Authentication:
     def init_auth_sa_token():
         """Generate service token for authentication."""
         auth_server_url = os.getenv('F8A_AUTH_SERVICE_HOST', '')
+        print("*****************auth server url ")
+        print(auth_server_url)
 
         if auth_server_url:
             endpoint = '{url}/api/token'.format(url=auth_server_url)
 
             client_id = os.getenv('GEMINI_SA_CLIENT_ID', 'id')
+            print("*****************gemini client id ")
+            print(client_id)
             client_secret = os.getenv('GEMINI_SA_CLIENT_SECRET', 'secret')
-
+            print("*****************client secret************")
+            print(client_secret)
             payload = {"grant_type": "client_credentials",
                        "client_id": client_id.strip(),
                        "client_secret": client_secret.strip()}

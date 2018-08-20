@@ -348,6 +348,7 @@ def generate_notification_payload():
             print(notify_)
     except Exception as e:
         logger.info(str(e))
+        print(str(e))
         sys.exit()
     print("generate_notification_payload() ended")
 
