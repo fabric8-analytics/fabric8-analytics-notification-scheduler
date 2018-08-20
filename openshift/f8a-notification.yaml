@@ -51,9 +51,9 @@ objects:
                       key: auth-url
                 - name: NOTIFICATION_SERVICE_HOST
                   valueFrom:
-                  configMapKeyRef:
-                    name: bayesian-config
-                    key: notification-url
+                    configMapKeyRef:
+                      name: bayesian-config
+                      key: notification-url
 parameters:
 - description: Docker registry
   displayName: Docker registry
