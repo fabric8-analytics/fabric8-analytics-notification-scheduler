@@ -39,11 +39,7 @@ class Authentication:
             endpoint = '{url}/api/token'.format(url=auth_server_url)
 
             client_id = os.getenv('GEMINI_SA_CLIENT_ID', 'id')
-            print("*****************gemini client id ")
-            print(client_id)
             client_secret = os.getenv('GEMINI_SA_CLIENT_SECRET', 'secret')
-            print("*****************client secret************")
-            print(client_secret)
             payload = {"grant_type": "client_credentials",
                        "client_id": client_id.strip(),
                        "client_secret": client_secret.strip()}

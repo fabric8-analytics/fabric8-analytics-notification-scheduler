@@ -74,9 +74,7 @@ def read_packages():
             'prev_date': prev_date
         }
     }
-    print(payload)
     gremlin_response = execute_gremlin_dsl(payload)
-    print(gremlin_response)
     if gremlin_response is not None:
         result_data = get_response_data(gremlin_response, [{0: 0}])
     else:
@@ -293,7 +291,7 @@ def check_license_compatibility():
 
             print(lic_json)
             is_conflict = check_license_conflict(lic_json)
-
+            print("License Conflict Result: %s", is_conflict)
             if is_conflict == "true":
                 FINAL_DATA[repo]['notify'] = 'false'
     print("check_license_compatibility() ended")
