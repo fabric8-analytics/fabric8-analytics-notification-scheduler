@@ -34,6 +34,8 @@ class UserNotification:
     def send_notification(notification, token):
         """Send notification to the OSIO notification service."""
         url = os.getenv('NOTIFICATION_SERVICE_HOST', '').strip()
+        print("****************Notificaion host************")
+        print(url)
         endpoint = '{url}/api/notify'.format(url=url)
         auth = 'Bearer {token}'.format(token=token)
         for notify_ in notification:
