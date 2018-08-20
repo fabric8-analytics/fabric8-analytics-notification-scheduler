@@ -31,7 +31,7 @@ class Authentication:
     @staticmethod
     def init_auth_sa_token():
         """Generate service token for authentication."""
-        auth_server_url = os.getenv('F8A_AUTH_SERVICE_HOST', '')
+        auth_server_url = os.getenv('AUTH_SERVICE_HOST', '')
         print("*****************auth server url ")
         print(auth_server_url)
 
