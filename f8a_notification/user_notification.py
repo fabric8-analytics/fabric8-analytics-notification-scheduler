@@ -21,10 +21,7 @@
 
 
 import os
-from time import strftime, gmtime
-from uuid import uuid4
 import requests
-import logging
 
 
 class UserNotification:

@@ -25,7 +25,6 @@ import json
 import logging
 import sys
 
-from pprint import pprint
 from datetime import datetime, timedelta
 from utils import select_latest_version, execute_gremlin_dsl
 from utils import get_response_data, check_license_conflict
