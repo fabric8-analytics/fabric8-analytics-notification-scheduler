@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directories="f8a_notification"
+directories="f8a_notification tests"
 separate_files="setup.py"
 pass=0
 fail=0
