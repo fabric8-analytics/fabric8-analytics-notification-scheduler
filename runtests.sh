@@ -8,8 +8,6 @@ here=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 # test coverage threshold
 COVERAGE_THRESHOLD=0
 
-TIMESTAMP="$(date +%F-%H-%M-%S)"
-
 gc() {
   retval=$?
   deactivate

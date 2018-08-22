@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 directories="f8a_notification tests"
