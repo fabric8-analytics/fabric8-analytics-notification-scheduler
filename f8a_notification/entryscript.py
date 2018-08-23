@@ -66,7 +66,7 @@ def read_packages():
     print("read_packages() started")
     prev_date = (datetime.utcnow() - timedelta(1)).strftime('%Y%m%d')
     query_str = "g.V().has('latest_version_last_updated',prev_date).valueMap()"
-    prev_date = '20180816'  # for testing purpose, change date here
+    # prev_date = '20180816'  # for testing purpose, change date here
     payload = {
         'gremlin': query_str,
         'bindings': {
