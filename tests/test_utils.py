@@ -12,12 +12,10 @@ def test_check_license_conflict(mocker):
     payload = {"a": "b"}
     mocker.return_value = MockedSession("lic_true")
     out = check_license_conflict(payload)
-    print(out)
     assert out is "false"
 
     mocker.return_value = MockedSession("lic_false")
     out = check_license_conflict(payload)
-    print(out)
     assert out is "true"
 
 
@@ -52,11 +50,9 @@ def test_execute_gremlin_dsl(mocker):
 
     mocker.return_value = MockedSession("true")
     out = execute_gremlin_dsl(payload)
-    print(out)
     assert out['requestId'] == "f98d1366-738e-4c14-a3ff-594f359e131c"
 
     out = get_response_data(out, [{0: 0}])
-    print(out)
     assert "a" in out
 
     mocker.return_value = MockedSession("false")
@@ -69,7 +65,6 @@ def test_execute_gremlin_dsl(mocker):
         }
     }
     out = execute_gremlin_dsl(payload)
-    print(out)
     assert out is None
 
 
