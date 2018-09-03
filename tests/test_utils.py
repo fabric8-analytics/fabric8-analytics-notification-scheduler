@@ -128,19 +128,19 @@ def mock_response(flag):
 
 def test_select_latest_version():
     """Test the function select_latest_version."""
-    lat_ver = select_latest_version("-1", "3.4.5", "3.4.1", "pkg")
+    lat_ver = select_latest_version("-1", ["3.4.5", "3.4.1"], "pkg")
     assert lat_ver is "3.4.5"
 
-    lat_ver = select_latest_version("-1", "3.4.1", "3.4.5", "pkg")
+    lat_ver = select_latest_version("-1", ["3.4.1", "3.4.5"], "pkg")
     assert lat_ver is "3.4.5"
 
-    lat_ver = select_latest_version("3.4.5", "3.4.1", "3.4.0", "pkg")
+    lat_ver = select_latest_version("3.4.5", ["3.4.1", "3.4.0"], "pkg")
     assert lat_ver is "3.4.5"
 
-    lat_ver = select_latest_version("-1", "-1", "-1", "pkg")
+    lat_ver = select_latest_version("-1", ["-1", "-1"], "pkg")
     assert lat_ver is ''
 
-    lat_ver = select_latest_version(["abc"], {"a": "b"}, ["b"], "pkg")
+    lat_ver = select_latest_version(["abc"], [{"a": "b"}, ["b"]], "pkg")
     assert lat_ver is ''
 
 
