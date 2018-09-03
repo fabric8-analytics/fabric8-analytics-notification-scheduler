@@ -83,35 +83,41 @@ def version_info_tuple(version):
     return (0, 0, 0, tuple())
 
 
+def find_latest_version(versions):
+    """Select latest version from the list of versions."""
+    latest = zero_version
+    latest_tuple = version_info_tuple(latest)
+    for ver in versions:
+        intermediate_version = convert_version_to_proper_semantic(ver)
+        interm_tuple = version_info_tuple(intermediate_version)
+        if interm_tuple >= latest_tuple:
+            latest = ver
+            latest_tuple = interm_tuple
+    return latest, intermediate_version
+
+
 def select_latest_version(input_version='',
-                          libio='',
-                          anitya='',
+                          versions=[],
                           package_name=None):
     """Select latest version from input sequence(s)."""
-    libio_sem_version = convert_version_to_proper_semantic(libio, package_name)
-    anitya_sem_version = convert_version_to_proper_semantic(
-        anitya, package_name)
+    latest, interm_sem_version = find_latest_version(versions)
     input_sem_version = convert_version_to_proper_semantic(
         input_version, package_name)
     return_version = ''
 
     try:
-        if libio_sem_version == zero_version\
-                and anitya_sem_version == zero_version\
+        if interm_sem_version == zero_version\
                 and input_sem_version == zero_version:
             return_version = ''
         else:
             return_version = input_version
-            libio_tuple = version_info_tuple(libio_sem_version)
-            anitya_tuple = version_info_tuple(anitya_sem_version)
+            latest_tuple = version_info_tuple(interm_sem_version)
             input_tuple = version_info_tuple(input_sem_version)
 
-            if libio_tuple >= anitya_tuple \
-                    and libio_tuple >= input_tuple:
-                return_version = libio
-            elif anitya_tuple >= libio_tuple \
-                    and anitya_tuple >= input_tuple:
-                return_version = anitya
+            if latest_tuple >= input_tuple:
+                return_version = latest
+            else:
+                return_version = input_version
     except ValueError:
         """In case of failure let's not show any latest version at all.
         Also, no generation of stack trace,
@@ -121,8 +127,7 @@ def select_latest_version(input_version='',
             "latest version for package {}. Debug:{}"
             .format(package_name,
                     {'input_version': input_version,
-                     'libio': libio,
-                     'anitya': anitya}))
+                     'versions': versions}))
         return_version = ''
         pass
     finally:
