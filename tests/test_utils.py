@@ -149,4 +149,3 @@ if __name__ == '__main__':
     test_select_latest_version()
     test_check_license_conflict()
     test_execute_gremlin_dsl2()
-

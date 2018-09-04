@@ -285,15 +285,19 @@ def find_latest_version(pkg_data,
                         transitive_flag="false"):
     """Find the latest version."""
     print("find_latest_version() started")
-    tmp_lst = []
+    tr_lst = []
+    dir_lst = []
+
     for repo in REPO_DATA:
-        del tmp_lst[:]
+        del tr_lst[:]
+        del dir_lst[:]
         if transitive_flag is "false":
             deps = REPO_DATA[repo]['dependencies']
             FINAL_DATA[repo] = {}
             FINAL_DATA[repo]['notify'] = "false"
-            FINAL_DATA[repo]['dep_count'] = 0
-            FINAL_DATA[repo]['tr_count'] = 0
+            FINAL_DATA[repo]['transitive_updates'] = []
+            FINAL_DATA[repo]['direct_updates'] = []
+
         else:
             if 'tr_dependencies' in REPO_DATA[repo]:
                 deps = REPO_DATA[repo]['tr_dependencies']
@@ -326,16 +330,14 @@ def find_latest_version(pkg_data,
                     tmp_json['name'] = pkg_name
                     tmp_json['version'] = cur_ver
                     tmp_json['latest_version'] = latest_version
-                    tmp_json['is_transitive'] = transitive_flag
                     if transitive_flag is "true":
-                        FINAL_DATA[repo]['tr_count'] += 1
+                        tr_lst.append(tmp_json)
                     else:
-                        FINAL_DATA[repo]['dep_count'] += 1
-                    tmp_lst.append(tmp_json)
-        if tmp_lst:
-            if 'version_updates' not in FINAL_DATA[repo]:
-                FINAL_DATA[repo]['version_updates'] = []
-            FINAL_DATA[repo]['version_updates'].extend(tmp_lst[:])
+                        dir_lst.append(tmp_json)
+        if tr_lst:
+            FINAL_DATA[repo]['transitive_updates'].extend(tr_lst[:])
+        if dir_lst:
+            FINAL_DATA[repo]['direct_updates'].extend(dir_lst[:])
 
     print("find_latest_version() ended")
 
@@ -354,7 +356,7 @@ def check_license_compatibility():
                 tmp_json['version'] = VERSION_DATA[dep]['version']
                 tmp_json['licenses'] = VERSION_DATA[dep]['license'][:]
                 lic_json['packages'].append(tmp_json)
-            ver_updates = FINAL_DATA[repo]['version_updates']
+            ver_updates = FINAL_DATA[repo]['direct_updates']
             for ver in ver_updates:
                 tmp_json = {}
                 eco = ver['ecosystem']
@@ -383,10 +385,9 @@ def generate_notification_payload():
                             "attributes": {
                                 "custom": {
                                     "repo_url": "",
-                                    "dependencies_count": "",
-                                    "transitive_count": "",
                                     "scanned_at": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
-                                    "version_updates": []
+                                    "transitive_updates": [],
+                                    "direct_updates": []
                                 },
                                 "id": "",
                                 "type": "analytics.notify.version"
@@ -396,12 +397,12 @@ def generate_notification_payload():
                             "type": "notifications"
                         }
                         }
-            tmp_json['data']['attributes']['custom']['dependencies_count'] = repo_data['dep_count']
-            tmp_json['data']['attributes']['custom']['transitive_count'] = repo_data['tr_count']
             tmp_json['data']['attributes']['custom']['repo_url'] = data
             tmp_json['data']['attributes']['id'] = data
-            tmp_json['data']['attributes']['custom']['version_updates'] \
-                = repo_data['version_updates']
+            tmp_json['data']['attributes']['custom']['transitive_updates'] \
+                = repo_data['transitive_updates']
+            tmp_json['data']['attributes']['custom']['direct_updates'] \
+                = repo_data['direct_updates']
             final_payload.append(tmp_json)
     print("<---Repo Data--->")
     print(REPO_DATA)
