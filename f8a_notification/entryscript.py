@@ -91,15 +91,15 @@ def read_packages():
         sys.exit()
 
     for result in result_data:
-        tmp_json = {}
         eco = get_value(result, 'ecosystem')
         name = get_value(result, 'name')
         if not eco + ":" + name in PACKAGE_DATA:
             PACKAGE_DATA[eco + ":" + name] = {}
-        tmp_json['name'] = name
-        tmp_json['ecosystem'] = eco
-        tmp_json['versions'] = []
-        PACKAGE_DATA[eco + ":" + name] = tmp_json
+        PACKAGE_DATA[eco + ":" + name] = {
+            'name': name,
+            'ecosystem': eco,
+            'versions': []
+        }
     print("read_packages() ended")
 
 
@@ -107,8 +107,8 @@ def get_version_data(pkg_data, new_ver_data, version_data, tr_flag="false"):
     """Get all the version info for the packages."""
     print("get_version_data() started")
     pkg_list = []
-    eco_lst = []
-    license_lst = []
+    eco_list = []
+    license_list = []
 
     for repo in REPO_DATA:
 
@@ -122,16 +122,16 @@ def get_version_data(pkg_data, new_ver_data, version_data, tr_flag="false"):
         for dep in deps:
             dep_data = version_data[dep]
             pkg_list.append(dep_data['name'])
-            eco_lst.append(REPO_DATA[repo]['ecosystem'])
+            eco_list.append(REPO_DATA[repo]['ecosystem'])
 
-    query_str = "g.V().has('pecosystem',within(eco_lst))." \
+    query_str = "g.V().has('pecosystem',within(eco_list))." \
                 "has('pname',within(pkg_list))" \
                 ".hasNot('cve_ids').valueMap().dedup()"
     payload = {
         'gremlin': query_str,
         'bindings': {
             'pkg_list': list(set(pkg_list)),
-            'eco_lst': list(set(eco_lst))
+            'eco_list': list(set(eco_list))
         }
     }
 
@@ -148,20 +148,23 @@ def get_version_data(pkg_data, new_ver_data, version_data, tr_flag="false"):
         ver = get_value(result, 'version')
         pkg_key = eco + ":" + name
 
-        del license_lst[:]
+        del license_list[:]
         if 'licenses' in result:
             for lic in result['licenses']:
-                license_lst.append(lic)
+                license_list.append(lic)
             key = eco + ":" + name + ":" + ver
-            new_ver_data[key] = {}
-            new_ver_data[key]['version'] = ver
-            new_ver_data[key]['package'] = eco + ":" + name
-            new_ver_data[key]['license'] = license_lst
+            new_ver_data[key] = {
+                'version': ver,
+                'package': eco + ":" + name,
+                'license': license_list
+            }
+
         if pkg_key not in pkg_data:
-            pkg_data[pkg_key] = {}
-            pkg_data[pkg_key]['name'] = name
-            pkg_data[pkg_key]['ecosystem'] = eco
-            pkg_data[pkg_key]['versions'] = []
+            pkg_data[pkg_key] = {
+                'name': name,
+                'ecosystem': eco,
+                'versions': []
+            }
         pkg_data[pkg_key]['versions'].append(key)
     print("get_version_data() ended")
 
@@ -170,20 +173,20 @@ def get_repos():
     """Read all the repo data."""
     print("get_repos() started")
     pkg_list = []
-    license_lst = []
-    eco_lst = []
+    license_list = []
+    eco_list = []
     for pkg in PACKAGE_DATA:
         pkg_list.append(PACKAGE_DATA[pkg]['name'])
-        eco_lst.append(PACKAGE_DATA[pkg]['ecosystem'])
+        eco_list.append(PACKAGE_DATA[pkg]['ecosystem'])
 
-    query_str = "g.V().has('pecosystem',within(eco_lst))." \
+    query_str = "g.V().has('pecosystem',within(eco_list))." \
                 "has('pname',within(pkg_list))" \
                 ".in('has_dependency').valueMap()"
     payload = {
         'gremlin': query_str,
         'bindings': {
             'pkg_list': pkg_list,
-            'eco_lst': eco_lst
+            'eco_list': eco_list
         }
     }
     gremlin_response = execute_gremlin_dsl(payload)
@@ -213,20 +216,21 @@ def get_repos():
 
     for result in result_data:
         repo = get_value(result['a'], 'repo_url')
-        del license_lst[:]
+        del license_list[:]
         if 'licenses' in result['b']:
             licenses = result['b']['licenses']
             for lic in licenses:
-                license_lst.append(lic)
+                license_list.append(lic)
             eco = get_value(result['b'], 'pecosystem')
             name = get_value(result['b'], 'pname')
             version = get_value(result['b'], 'version')
             key = eco + ":" + name + ":" + version
-            VERSION_DATA[key] = {}
-            VERSION_DATA[key]['version'] = version
-            VERSION_DATA[key]['name'] = name
-            VERSION_DATA[key]['package'] = eco + ":" + name
-            VERSION_DATA[key]['license'] = license_lst
+            VERSION_DATA[key] = {
+                'version': version,
+                'name': name,
+                'package': eco + ":" + name,
+                'license': license_list
+            }
         if repo not in REPO_DATA:
             REPO_DATA[repo] = {}
         REPO_DATA[repo]['ecosystem'] = eco
@@ -257,16 +261,18 @@ def get_repos():
         name = get_value(result['b'], 'pname')
         version = get_value(result['b'], 'version')
         key = eco + ":" + name + ":" + version
-        TRANSITIVE_VERSION_DATA[key] = {}
-        TRANSITIVE_VERSION_DATA[key]['version'] = version
-        TRANSITIVE_VERSION_DATA[key]['name'] = name
-        TRANSITIVE_VERSION_DATA[key]['package'] = eco + ":" + name
+        TRANSITIVE_VERSION_DATA[key] = {
+            'version': version,
+            'name': name,
+            'package': eco + ":" + name
+        }
 
         pkg_key = eco + ":" + name
-        TRANSITIVE_PACKAGE_DATA[pkg_key] = {}
-        TRANSITIVE_PACKAGE_DATA[pkg_key]['ecosystem'] = eco
-        TRANSITIVE_PACKAGE_DATA[pkg_key]['name'] = name
-        TRANSITIVE_PACKAGE_DATA[pkg_key]['versions'] = []
+        TRANSITIVE_PACKAGE_DATA[pkg_key] = {
+            'ecosystem': eco,
+            'name': name,
+            'versions': []
+        }
 
         if repo not in REPO_DATA:
             REPO_DATA[repo] = {}
@@ -285,18 +291,19 @@ def find_latest_version(pkg_data,
                         transitive_flag="false"):
     """Find the latest version."""
     print("find_latest_version() started")
-    tr_lst = []
-    dir_lst = []
+    tr_list = []
+    dir_list = []
 
     for repo in REPO_DATA:
-        del tr_lst[:]
-        del dir_lst[:]
+        del tr_list[:]
+        del dir_list[:]
         if transitive_flag is "false":
             deps = REPO_DATA[repo]['dependencies']
-            FINAL_DATA[repo] = {}
-            FINAL_DATA[repo]['notify'] = "false"
-            FINAL_DATA[repo]['transitive_updates'] = []
-            FINAL_DATA[repo]['direct_updates'] = []
+            FINAL_DATA[repo] = {
+                'notify': 'false',
+                'transitive_updates': [],
+                'direct_updates': []
+            }
 
         else:
             if 'tr_dependencies' in REPO_DATA[repo]:
@@ -305,7 +312,7 @@ def find_latest_version(pkg_data,
                 deps = []
         for dep in deps:
             tmp_json = {}
-            ver_lst = []
+            ver_list = []
             pkg = version_data[dep]['package']
             if pkg in pkg_data and \
                     (dep in new_version_data or dep in version_data) and \
@@ -314,30 +321,33 @@ def find_latest_version(pkg_data,
                 if 'versions' in pkg_data[pkg]:
                     versions = pkg_data[pkg]['versions']
                     for ver in versions:
-                        ver_lst.append(new_version_data[ver]['version'])
+                        ver_list.append(new_version_data[ver]['version'])
                 cur_ver = version_data[dep]['version']
                 pkg_name = pkg_data[pkg]['name']
                 latest_version = \
                     select_latest_version(cur_ver,
-                                          ver_lst,
+                                          ver_list,
                                           pkg_name)
                 eco = REPO_DATA[repo]['ecosystem']
                 latest_key = eco + ":" + pkg_name + ":" + latest_version
                 if latest_version != cur_ver and \
                         (latest_key in new_version_data or latest_key in version_data):
                     FINAL_DATA[repo]['notify'] = "true"
-                    tmp_json['ecosystem'] = eco
-                    tmp_json['name'] = pkg_name
-                    tmp_json['version'] = cur_ver
-                    tmp_json['latest_version'] = latest_version
+                    tmp_json = {
+                        'ecosystem': eco,
+                        'name': pkg_name,
+                        'version': cur_ver,
+                        'latest_version': latest_version
+                    }
+
                     if transitive_flag is "true":
-                        tr_lst.append(tmp_json)
+                        tr_list.append(tmp_json)
                     else:
-                        dir_lst.append(tmp_json)
-        if tr_lst:
-            FINAL_DATA[repo]['transitive_updates'].extend(tr_lst[:])
-        if dir_lst:
-            FINAL_DATA[repo]['direct_updates'].extend(dir_lst[:])
+                        dir_list.append(tmp_json)
+        if tr_list:
+            FINAL_DATA[repo]['transitive_updates'].extend(tr_list[:])
+        if dir_list:
+            FINAL_DATA[repo]['direct_updates'].extend(dir_list[:])
 
     print("find_latest_version() ended")
 
@@ -351,19 +361,21 @@ def check_license_compatibility():
             lic_json['packages'] = []
             deps = REPO_DATA[repo]['dependencies']
             for dep in deps:
-                tmp_json = {}
-                tmp_json['package'] = VERSION_DATA[dep]['package']
-                tmp_json['version'] = VERSION_DATA[dep]['version']
-                tmp_json['licenses'] = VERSION_DATA[dep]['license'][:]
+                tmp_json = {
+                    'package': VERSION_DATA[dep]['package'],
+                    'version': VERSION_DATA[dep]['version'],
+                    'licenses': VERSION_DATA[dep]['license'][:]
+                }
                 lic_json['packages'].append(tmp_json)
             ver_updates = FINAL_DATA[repo]['direct_updates']
             for ver in ver_updates:
-                tmp_json = {}
                 eco = ver['ecosystem']
-                tmp_json['package'] = ver['name']
-                tmp_json['version'] = ver['latest_version']
                 key = eco + ":" + ver['name'] + ":" + ver['latest_version']
-                tmp_json['licenses'] = NEW_VERSION_DATA[key]['license'][:]
+                tmp_json = {
+                    'package': ver['name'],
+                    'version': ver['latest_version'],
+                    'licenses': NEW_VERSION_DATA[key]['license'][:]
+                }
                 lic_json['packages'].append(tmp_json)
 
             print(lic_json)
@@ -385,7 +397,7 @@ def generate_notification_payload():
                             "attributes": {
                                 "custom": {
                                     "repo_url": "",
-                                    "scanned_at": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                                    "scanned_at": datetime.utcnow().strftime('%a, %d %B %Y %T UTC'),
                                     "transitive_updates": [],
                                     "direct_updates": []
                                 },
