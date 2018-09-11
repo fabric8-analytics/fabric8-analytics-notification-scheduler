@@ -21,7 +21,6 @@
 """Class to create cron script."""
 
 
-import json
 import logging
 import sys
 
@@ -45,9 +44,9 @@ NEW_TRANSITIVE_VERSION_DATA = {}
 logger = logging.getLogger(__name__)
 
 
-def get_value(json, property):
-    """Get the values from json."""
-    return json.get(property, [''])[0]
+def get_value(json_data, property):
+    """Get the values from json_data."""
+    return json_data.get(property, [''])[0]
 
 
 def run():
