@@ -1,3 +1,5 @@
 semantic_version
 datetime
 requests
+requests-futures
+pathlib
