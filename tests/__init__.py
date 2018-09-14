@@ -16,3 +16,14 @@
 #
 
 """Initialize Test Module."""
+
+from f8a_notification import __init__
+
+
+def test_dummy():
+    """Initialize Test Module."""
+    pass
+
+
+if __name__ == '__main__':
+    test_dummy()
