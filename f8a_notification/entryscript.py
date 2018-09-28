@@ -21,7 +21,6 @@
 """Class to create cron script."""
 
 
-import json
 import logging
 import sys
 
@@ -45,9 +44,9 @@ NEW_TRANSITIVE_VERSION_DATA = {}
 logger = logging.getLogger(__name__)
 
 
-def get_value(json, property):
-    """Get the values from json."""
-    return json.get(property, [''])[0]
+def get_value(json_data, property):
+    """Get the values from json_data."""
+    return json_data.get(property, [''])[0]
 
 
 def run():
@@ -56,8 +55,8 @@ def run():
     print("Scheduled scan for newer versions started")
     read_packages()
     get_repos()
-    get_version_data(PACKAGE_DATA, NEW_VERSION_DATA, VERSION_DATA)
-    get_version_data(TRANSITIVE_PACKAGE_DATA, NEW_TRANSITIVE_VERSION_DATA,
+    get_version_data(REPO_DATA, PACKAGE_DATA, NEW_VERSION_DATA, VERSION_DATA)
+    get_version_data(REPO_DATA, TRANSITIVE_PACKAGE_DATA, NEW_TRANSITIVE_VERSION_DATA,
                      TRANSITIVE_VERSION_DATA, "true")
     find_latest_version(PACKAGE_DATA,
                         VERSION_DATA,
@@ -66,9 +65,10 @@ def run():
     find_latest_version(TRANSITIVE_PACKAGE_DATA,
                         TRANSITIVE_VERSION_DATA,
                         NEW_TRANSITIVE_VERSION_DATA, "true")
-    generate_notification_payload()
+    result = generate_notification_payload()
     logger.info("Scheduled scan for newer versions finished")
     print("Scheduled scan for newer versions finished")
+    return result
 
 
 def read_packages():
@@ -103,26 +103,27 @@ def read_packages():
     print("read_packages() ended")
 
 
-def get_version_data(pkg_data, new_ver_data, version_data, tr_flag="false"):
+def get_version_data(repo_data, pkg_data, new_ver_data, version_data, tr_flag="false"):
     """Get all the version info for the packages."""
     print("get_version_data() started")
     pkg_list = []
     eco_list = []
     license_list = []
 
-    for repo in REPO_DATA:
+    for repo in repo_data:
 
-        if tr_flag is "true" and "tr_dependencies" in REPO_DATA[repo]:
-            deps = REPO_DATA[repo]['tr_dependencies']
+        if tr_flag is "true" and "tr_dependencies" in repo_data[repo]:
+            deps = repo_data[repo]['tr_dependencies']
         elif tr_flag is "false":
-            deps = REPO_DATA[repo]['dependencies']
+            deps = repo_data[repo]['dependencies']
         else:
+            print("Repo doesnt have transitive deps. Ignoring ", repo)
             continue
 
         for dep in deps:
             dep_data = version_data[dep]
             pkg_list.append(dep_data['name'])
-            eco_list.append(REPO_DATA[repo]['ecosystem'])
+            eco_list.append(repo_data[repo]['ecosystem'])
 
     query_str = "g.V().has('pecosystem',within(eco_list))." \
                 "has('pname',within(pkg_list))" \
@@ -447,6 +448,7 @@ def generate_notification_payload():
         print(str(e))
         sys.exit()
     print("generate_notification_payload() ended")
+    return "success"
 
 
 if __name__ == "__main__":
