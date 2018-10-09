@@ -127,7 +127,7 @@ def get_version_data(repo_data, pkg_data, new_ver_data, version_data, tr_flag="f
 
     query_str = "g.V().has('pecosystem',within(eco_list))." \
                 "has('pname',within(pkg_list))" \
-                ".hasNot('cve_ids').valueMap().dedup()"
+                ".not(outE('has_cve')).valueMap().dedup()"
     payload = {
         'gremlin': query_str,
         'bindings': {
