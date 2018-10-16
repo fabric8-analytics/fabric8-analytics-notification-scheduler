@@ -3,8 +3,6 @@
 set -e
 set -x
 
-here=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
-
 # test coverage threshold
 COVERAGE_THRESHOLD=0
 
