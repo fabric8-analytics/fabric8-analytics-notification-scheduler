@@ -4,7 +4,7 @@ set -e
 set -x
 
 # test coverage threshold
-COVERAGE_THRESHOLD=0
+COVERAGE_THRESHOLD=70
 
 gc() {
   retval=$?
