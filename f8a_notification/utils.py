@@ -184,6 +184,7 @@ def check_license_conflict(payload):
     lic_response = get_session_retry().post(license_url,
                                             data=json.dumps(payload))
     resp = lic_response.json()
+    # TODO: there's only one place where this value is used, so why to use strings?
     if resp['status'] == "Successful":
         return "false"
     else:
