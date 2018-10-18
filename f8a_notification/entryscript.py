@@ -446,6 +446,7 @@ def generate_notification_payload():
     except Exception as e:
         logger.info(str(e))
         print(str(e))
+        # TODO: use proper exit code
         sys.exit()
     print("generate_notification_payload() ended")
     return "success"
