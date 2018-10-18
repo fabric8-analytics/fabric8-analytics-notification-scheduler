@@ -57,6 +57,10 @@ Usage:
 
 ```
 ./run-linter.sh
+```
+and:
+
+```
 ./check-docstyle.sh
 ```
 
@@ -70,6 +74,10 @@ The scripts `measure-cyclomatic-complexity.sh` and `measure-maintainability-inde
 
 ```
 ./measure-cyclomatic-complexity.sh
+```
+and:
+
+```
 ./measure-maintainability-index.sh
 ```
 
@@ -99,7 +107,7 @@ The script `detect-common-errors.sh` can be used to detect common errors in the 
 ./detect-common-errors.sh
 ```
 
-Please note that only semantical problems are reported.
+Please note that only semantic problems are reported.
 
 #### Check for scripts written in BASH
 
