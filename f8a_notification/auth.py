@@ -32,7 +32,7 @@ class Authentication:
     def init_auth_sa_token():
         """Generate service token for authentication."""
         auth_server_url = os.getenv('AUTH_SERVICE_HOST', '')
-        # TODO: add proper logging here 
+        # TODO: add proper logging here
         print("*****************auth server url ")
         print(auth_server_url)
 
@@ -62,8 +62,8 @@ class Authentication:
                     return access_token
 
             except requests.exceptions.RequestException as e:
-                # TODO: add proper logging here 
+                # TODO: add proper logging here
                 raise e
 
-        # TODO: add proper logging here 
+        # TODO: add proper logging here
         raise requests.exceptions.RequestException
