@@ -20,9 +20,8 @@
 """Utils functions for Github usage."""
 
 import json
-import os
 from git import Repo
-from pathlib import Path, PurePath
+from pathlib import Path
 import lxml.etree as ET
 from datetime import datetime
 from requests_futures.sessions import FuturesSession
@@ -171,7 +170,8 @@ class MavenUpdates:
                 if version_found_flag == "false":
                     print("Checking management section for dependencies")
                     for mgt_node in root.xpath("//ns:dependencyManagement/ns:dependencies"
-                                               "/ns:dependency[ns:groupId[text()='" + group_id + "']]",
+                                               "/ns:dependency[ns:groupId[text()='" + group_id +
+                                               "']]",
                                                namespaces={'ns': ns}):
                         mgt_ver_node = mgt_node.find('ns:version', namespaces={'ns': ns})
                         if mgt_ver_node is not None:
