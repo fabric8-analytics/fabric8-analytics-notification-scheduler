@@ -258,5 +258,3 @@ if __name__ == '__main__':
     with open('./f8a_notification/sample.json') as f:
         data = json.load(f)
     start_gh_operation(data)
-
-oc login https://devtools-dev.ext.devshift.net:8443 --token=oj_qo-epMuPuj7sZ9u3npcNOWjoEFwX0hAxRfXucPdM
