@@ -20,9 +20,8 @@
 """Utils functions for Github usage."""
 
 import json
-import os
 from git import Repo
-from pathlib import Path, PurePath
+from pathlib import Path
 import lxml.etree as ET
 from datetime import datetime
 from requests_futures.sessions import FuturesSession
