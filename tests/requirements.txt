@@ -7,6 +7,7 @@
 atomicwrites==1.1.5       # via pytest
 attrs==18.1.0             # via pytest
 coverage==4.5.1
+codecov==2.0.15
 more-itertools==4.3.0     # via pytest
 pluggy==0.7.1             # via pytest
 py==1.5.4                 # via pytest
