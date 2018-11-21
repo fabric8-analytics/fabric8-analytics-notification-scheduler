@@ -39,4 +39,6 @@ pip3 install -r tests/requirements.txt
 
 python3 "$(which pytest)" --cov=f8a_notification/ --cov-report term-missing --cov-fail-under=$COVERAGE_THRESHOLD -vv tests
 
+codecov --token=3a540a46-f7e9-4050-b36a-97f81b948bcb
+
 echo "Test suite passed \\o/"
