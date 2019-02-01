@@ -112,9 +112,9 @@ def get_version_data(repo_data, pkg_data, new_ver_data, version_data, tr_flag="f
 
     for repo in repo_data:
 
-        if tr_flag is "true" and "tr_dependencies" in repo_data[repo]:
+        if tr_flag == "true" and "tr_dependencies" in repo_data[repo]:
             deps = repo_data[repo]['tr_dependencies']
-        elif tr_flag is "false":
+        elif tr_flag == "false":
             deps = repo_data[repo]['dependencies']
         else:
             print("Repo doesnt have transitive deps. Ignoring ", repo)
@@ -298,7 +298,7 @@ def find_latest_version(pkg_data,
     for repo in REPO_DATA:
         del tr_list[:]
         del dir_list[:]
-        if transitive_flag is "false":
+        if transitive_flag == "false":
             deps = REPO_DATA[repo]['dependencies']
             FINAL_DATA[repo] = {
                 'notify': 'false',
@@ -317,8 +317,8 @@ def find_latest_version(pkg_data,
             pkg = version_data[dep]['package']
             if pkg in pkg_data and \
                     (dep in new_version_data or dep in version_data) and \
-                    (transitive_flag is "false" or (
-                            FINAL_DATA[repo]['notify'] is "true" and transitive_flag is "true")):
+                    (transitive_flag == "false" or (
+                            FINAL_DATA[repo]['notify'] == "true" and transitive_flag == "true")):
                 if 'versions' in pkg_data[pkg]:
                     versions = pkg_data[pkg]['versions']
                     for ver in versions:
@@ -341,7 +341,7 @@ def find_latest_version(pkg_data,
                         'latest_version': latest_version
                     }
 
-                    if transitive_flag is "true":
+                    if transitive_flag == "true":
                         tr_list.append(tmp_json)
                     else:
                         dir_list.append(tmp_json)
