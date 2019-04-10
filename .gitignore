@@ -9,3 +9,5 @@ tests/__pycache__/
 .vscode/
 html/
 latex/
+
+.DS_Store

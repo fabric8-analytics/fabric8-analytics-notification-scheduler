@@ -6,7 +6,7 @@ ENV APP_DIR='/f8a_notification'
 WORKDIR ${APP_DIR}
 
 RUN yum install -y epel-release &&\
-    yum install -y gcc git python34-pip python34-devel &&\
+    yum install -y gcc git python36-pip python36-devel &&\
     yum clean all &&\
     mkdir -p ${APP_DIR}
 
