@@ -6,6 +6,10 @@ set -x
 # test coverage threshold
 COVERAGE_THRESHOLD=60
 
+check_python_version() {
+    python3 tools/check_python_version.py 3 6
+}
+
 gc() {
   retval=$?
   deactivate
@@ -19,7 +23,7 @@ function prepare_venv() {
     VIRTUALENV=$(which virtualenv) || :
     if [ -z "$VIRTUALENV" ]
     then
-        # python34 which is in CentOS does not have virtualenv binary
+        # python36 which is in CentOS does not have virtualenv binary
         VIRTUALENV=$(which virtualenv-3)
     fi
 
@@ -30,9 +34,12 @@ function prepare_venv() {
         exit 1
     fi
 }
+
 PYTHONPATH=$(pwd)/f8a_notification/
 export PYTHONPATH
 prepare_venv
+check_python_version
+
 pip3 install -r requirements.txt
 
 pip3 install -r tests/requirements.txt
