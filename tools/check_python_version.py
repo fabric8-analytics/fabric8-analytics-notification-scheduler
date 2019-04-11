@@ -18,7 +18,7 @@ def get_expected_version(arguments):
 
     try:
         minor = int(arguments[2])
-    except Exception:
+    except Exception as e:
         print("Can not parse minor version '{}'".format(arguments[2]))
         raise e
 
