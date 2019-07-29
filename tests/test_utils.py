@@ -1,7 +1,6 @@
 """Tests for the 'utils' module."""
 
-import json
-from unittest import TestCase, mock
+from unittest import mock
 from utils import execute_gremlin_dsl, select_latest_version,\
     get_response_data, check_license_conflict
 
@@ -12,11 +11,11 @@ def test_check_license_conflict(mocker):
     payload = {"a": "b"}
     mocker.return_value = MockedSession("lic_true")
     out = check_license_conflict(payload)
-    assert out is "false"
+    assert out == "false"
 
     mocker.return_value = MockedSession("lic_false")
     out = check_license_conflict(payload)
-    assert out is "true"
+    assert out == "true"
 
 
 def test_execute_gremlin_dsl2():
@@ -116,32 +115,32 @@ def mock_response(flag):
     resp_true = {"status": "Successful"}
     resp_false = {"status": "Unknown"}
 
-    if flag is "false":
+    if flag == "false":
         return MockResponse(resp, 400)
-    elif flag is "true":
+    elif flag == "true":
         return MockResponse(resp, 200)
-    elif flag is "lic_true":
+    elif flag == "lic_true":
         return MockResponse(resp_true, 200)
-    elif flag is "lic_false":
+    elif flag == "lic_false":
         return MockResponse(resp_false, 200)
 
 
 def test_select_latest_version():
     """Test the function select_latest_version."""
     lat_ver = select_latest_version("-1", ["3.4.5", "3.4.1"], "pkg")
-    assert lat_ver is "3.4.5"
+    assert lat_ver == "3.4.5"
 
     lat_ver = select_latest_version("-1", ["3.4.1", "3.4.5"], "pkg")
-    assert lat_ver is "3.4.5"
+    assert lat_ver == "3.4.5"
 
     lat_ver = select_latest_version("3.4.5", ["3.4.1", "3.4.0"], "pkg")
-    assert lat_ver is "3.4.5"
+    assert lat_ver == "3.4.5"
 
     lat_ver = select_latest_version("-1", ["-1", "-1"], "pkg")
-    assert lat_ver is ''
+    assert lat_ver == ''
 
     lat_ver = select_latest_version(["abc"], [{"a": "b"}, ["b"]], "pkg")
-    assert lat_ver is ''
+    assert lat_ver == ''
 
 
 if __name__ == '__main__':
