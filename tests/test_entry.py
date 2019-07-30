@@ -1,8 +1,7 @@
 
 """Test module for classes and functions found in the entryscript module."""
-import os
 import entryscript as es
-from unittest import TestCase, mock
+from unittest import mock
 
 
 def mock_repo_response():
@@ -154,12 +153,6 @@ def test_get_version_data(mocker):
 @mock.patch("entryscript.execute_gremlin_dsl")
 def test_get_repos(mocker):
     """Test get_repos function."""
-    PACKAGE_DATA = {
-        "maven:io.vertx:vertx-web": {
-            "name": "io.vertx:vertx-web",
-            "ecosystem": "maven"
-        }
-    }
     mocker.side_effect = [mock_repo_response(),
                           mock_repo_combo_response(),
                           mock_repo_tr_response()]
