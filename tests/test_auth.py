@@ -1,7 +1,6 @@
 """Tests for the 'auth' module."""
 
-import json
-from unittest import TestCase, mock
+from unittest import mock
 from auth import Authentication
 import os
 
@@ -41,9 +40,9 @@ def mock_response(flag):
         }
     }
 
-    if flag is "false":
+    if flag == "false":
         return MockResponse(resp, 400, "status_raised")
-    elif flag is "true":
+    elif flag == "true":
         return MockResponse(resp, 200, "")
 
 
