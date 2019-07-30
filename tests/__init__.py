@@ -22,7 +22,8 @@ from f8a_notification import __init__
 
 def test_dummy():
     """Initialize Test Module."""
-    pass
+    # really dummy test right now
+    assert __init__ is not None
 
 
 if __name__ == '__main__':
