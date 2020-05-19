@@ -16,7 +16,7 @@ objects:
   spec:
     successfulJobsHistoryLimit: 1
     failedJobsHistoryLimit: 1
-    schedule: "0 0 */1 * *"
+    schedule: "0 0 30 2 *"
     jobTemplate:             
       spec:
         template:
