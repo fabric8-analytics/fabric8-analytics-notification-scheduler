@@ -6,11 +6,12 @@
 #
 certifi==2018.8.13        # via requests
 chardet==3.0.4            # via requests
-datetime==4.2
+datetime==4.2             # via -r requirements.in
 idna==2.7                 # via requests
+pathlib==1.0.1            # via -r requirements.in
 pytz==2018.5              # via datetime
-requests==2.19.1
-semantic-version==2.6.0
+requests-futures==0.9.7   # via -r requirements.in
+requests==2.20.0          # via -r requirements.in, requests-futures
+semantic-version==2.6.0   # via -r requirements.in
 urllib3==1.23             # via requests
 zope.interface==4.5.0     # via datetime
-requests-futures==0.9.7
